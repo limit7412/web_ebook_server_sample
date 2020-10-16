@@ -1,12 +1,22 @@
-import { APIGatewayProxyHandler } from 'aws-lambda';
+import { APIGatewayProxyHandler, CloudFrontRequestHandler } from 'aws-lambda';
 import 'source-map-support/register';
 
-export const hello: APIGatewayProxyHandler = async (event, _context) => {
+const accessKey = 'demo-key'
+
+export const CreateURL: APIGatewayProxyHandler = async (event, _context) => {
+  const url = 'https://hogehoge.hoge'
+
   return {
     statusCode: 200,
     body: JSON.stringify({
-      message: 'Go Serverless Webpack (Typescript) v1.0! Your function executed successfully!',
-      // input: event,
+      url: url,
     }, null, 2),
   };
+}
+
+export const GetContent: CloudFrontRequestHandler = async (event, _context) => {
+  const request = event.Records[0].cf.request;
+  console.log(`request: ${JSON.stringify(request)}`)
+  // request.uri =
+  return request
 }
