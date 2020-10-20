@@ -5,6 +5,9 @@ plugins:
 
 custom:
   defaultStage: dev
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules: true
 
 provider:
   name: aws
@@ -12,6 +15,8 @@ provider:
   timeout: 20
   region: us-east-1
   stage: ${opt:stage, self:custom.defaultStage}
+  environment:
+    ${file(./env.yml)}
 
 functions:
   createURL:
@@ -24,8 +29,8 @@ functions:
     handler: src/handler.GetContent
     events:
       - cloudFront:
-          eventType: viewer-response
-          pathPattern: /test
+          eventType: viewer-request
+          pathPattern: '*viewer/bibi-bookshelf*'
           origin: s3://web-viewer-bucket.s3.amazonaws.com
 
 # NOTE: serverlessではバケットまで全部まとめて一つのymlでよしなに作ってはくれないみたいです。残念
